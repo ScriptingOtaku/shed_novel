@@ -24,10 +24,16 @@ end
 function CameraModule:set_character(character_model: Instance, offset: Vector3, rotation: Vector3)
     if not offset then
         offset = character_model:FindFirstChild("Offset", true)
+        if offset then
+            offset = offset.Value
+        end
     end
     offset = offset or Vector3.new(0, 0, 0)
     if not rotation then
         rotation = character_model:FindFirstChild("Rotation", true)
+        if rotation then
+            rotation = rotation.Value
+        end
     end
     rotation = rotation or Vector3.new(0, 0, 0)
     character_model:PivotTo(Camera.CFrame * CFrame.new(offset) * CFrame.Angles(

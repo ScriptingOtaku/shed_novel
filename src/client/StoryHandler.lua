@@ -56,37 +56,64 @@ local function run(story: Story, line: Line, index: number)
     if text ~= "END" then
         if text ~= "WAIT" then
             if text ~= "EDIT" then
-                Set:update(line)
-                if options == nil or options == {} then
-                    mount = Roact.mount(ScreenGui(Roact.createElement(Dialogue, {
-                        dialogue_text = text,
-                        character_name = character,
-                        scroll_finished = function()
-                            UnMount()
-                            run(
-                                story,
-                                get_next_line(story, index),
-                                index + 1
-                            )
-                        end,
+                if text ~= "SOUND" then
+                    Set:update(line)
+                    if options == nil or options == {} then
+                        mount = Roact.mount(ScreenGui(Roact.createElement(Dialogue, {
+                            dialogue_text = text,
+                            character_name = character,
+                            scroll_finished = function()
+                                UnMount()
+                                run(
+                                    story,
+                                    get_next_line(story, index),
+                                    index + 1
+                                )
+                            end,
 
-                    })), PlayerGui)
+                        })), PlayerGui)
+                    else
+                        mount = Roact.mount(ScreenGui(Roact.createElement(Dialogue, {
+                            dialogue_text = text,
+                            character_name = character,
+                            dialogue_options = options,
+                            scroll_finished = function() end,
+                            on_click = function(_choice: string, choice_index: number)
+                                UnMount()
+                                run(
+                                    options[choice_index].story,
+                                    get_next_line(options[choice_index].story, 0),
+                                    1
+                                )
+                            end,
+
+                        })), PlayerGui)
+                    end
                 else
-                    mount = Roact.mount(ScreenGui(Roact.createElement(Dialogue, {
-                        dialogue_text = text,
-                        character_name = character,
-                        dialogue_options = options,
-                        scroll_finished = function() end,
-                        on_click = function(_choice: string, choice_index: number)
-                            UnMount()
-                            run(
-                                options[choice_index].story,
-                                get_next_line(options[choice_index].story, 0),
-                                1
-                            )
-                        end,
-
-                    })), PlayerGui)
+                    local sound = line.sound
+                    local looped = line.looped
+                    if sound ~= nil then
+                        if looped == nil then
+                            looped = false
+                        end
+                        local sound_instance = Instance.new("Sound")
+                        sound_instance.SoundId = "rbxassetid://" .. sound
+                        sound_instance.Parent = PlayerGui
+                        sound_instance.Volume = line.volume
+                        sound_instance.Looped = looped
+                        sound_instance:Play()
+                        if not looped then
+                            task.spawn(function()
+                                sound_instance.Ended:Wait()
+                                sound_instance:Destroy()
+                            end)
+                        end
+                    end
+                    run(
+                        story,
+                        get_next_line(story, index),
+                        index + 1
+                    )
                 end
             else
                 UnMount()

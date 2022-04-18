@@ -13,11 +13,12 @@ local Backgrounds = ReplicatedStorage:WaitForChild("Backgrounds")
 local Characters = ReplicatedStorage:WaitForChild("Characters")
 
 function get_background_model(background: string)
-    local background_model = Backgrounds:FindFirstChild(background)
+    local background_model = Backgrounds:FindFirstChild(background):Clone()
     return background_model
 end
 function get_character_model(character: string)
-    local character_model = Characters:FindFirstChild(character)
+    print(character)
+    local character_model = Characters:FindFirstChild(character):Clone()
     return character_model
 end
 
@@ -76,9 +77,13 @@ function set:update(line: table)
         self:set_background(background)
     end
     if character then
-        if character ~= "Player" then
-            self:set_character(character)
+        if character == "Player" then
+            character = "Nothing"
         end
+        if character == "Narrator" then
+            character = "Nothing"
+        end
+        self:set_character(character)
     end
 end
 
