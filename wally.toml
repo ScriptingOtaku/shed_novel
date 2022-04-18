@@ -1,0 +1,11 @@
+[package]
+name = "djs08/shedvisualnovel"
+version = "0.1.0"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+
+[place]
+shared-packages = "game.ReplicatedStorage.Packages"
+
+[dependencies]
+Roact = "roblox/roact@1.4.2"

@@ -1,0 +1,10 @@
+# Project place file
+/shed.rbxlx
+
+# Roblox Studio lock files
+/*.rbxlx.lock
+/*.rbxl.lock
+
+# Reload Selene
+/roblox.toml
+/selene.toml
