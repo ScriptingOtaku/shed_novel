@@ -54,37 +54,57 @@ local function run(story: Story, line: Line, index: number)
     local character = line.character
 
     if text ~= "END" then
-        Set:update(line)
-        if options == nil or options == {} then
-            mount = Roact.mount(ScreenGui(Roact.createElement(Dialogue, {
-                dialogue_text = text,
-                character_name = character,
-                scroll_finished = function()
-                    UnMount()
-                    run(
-                        story,
-                        get_next_line(story, index),
-                        index + 1
-                    )
-                end,
+        if text ~= "WAIT" then
+            if text ~= "EDIT" then
+                Set:update(line)
+                if options == nil or options == {} then
+                    mount = Roact.mount(ScreenGui(Roact.createElement(Dialogue, {
+                        dialogue_text = text,
+                        character_name = character,
+                        scroll_finished = function()
+                            UnMount()
+                            run(
+                                story,
+                                get_next_line(story, index),
+                                index + 1
+                            )
+                        end,
 
-            })), PlayerGui)
+                    })), PlayerGui)
+                else
+                    mount = Roact.mount(ScreenGui(Roact.createElement(Dialogue, {
+                        dialogue_text = text,
+                        character_name = character,
+                        dialogue_options = options,
+                        scroll_finished = function() end,
+                        on_click = function(_choice: string, choice_index: number)
+                            UnMount()
+                            run(
+                                options[choice_index].story,
+                                get_next_line(options[choice_index].story, 0),
+                                1
+                            )
+                        end,
+
+                    })), PlayerGui)
+                end
+            else
+                UnMount()
+                Set:update(line)
+                run(
+                    story,
+                    get_next_line(story, index),
+                    index + 1
+                )
+            end
         else
-            mount = Roact.mount(ScreenGui(Roact.createElement(Dialogue, {
-                dialogue_text = text,
-                character_name = character,
-                dialogue_options = options,
-                scroll_finished = function() end,
-                on_click = function(_choice: string, choice_index: number)
-                    UnMount()
-                    run(
-                        options[choice_index].story,
-                        get_next_line(options[choice_index].story, 0),
-                        1
-                    )
-                end,
-
-            })), PlayerGui)
+            UnMount()
+            task.wait(line.time)
+            run(
+                story,
+                get_next_line(story, index),
+                index + 1
+            )
         end
     else
         print("END")
