@@ -65,4 +65,4 @@ local StoryStart = {
     }, "Theo"),
 }
 
-return IDK
+return StoryStart
