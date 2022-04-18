@@ -46,6 +46,7 @@ local function run(story: Story, line: Line, index: number)
     if line == nil then
         UnMount()
         Set:remove_all()
+        Player:Kick("Story finished, i have no idea what ending you got.")
         return
     end
 
@@ -137,6 +138,7 @@ local function run(story: Story, line: Line, index: number)
         print("END")
         Set:remove_all()
         UnMount()
+        Player:Kick("Story finished, i have no idea what ending you got.")
     end
 end
 
