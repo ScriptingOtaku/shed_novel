@@ -17,7 +17,7 @@ type Story = {
 type Line = {}
 
 local mount = nil
-local menu = nil
+local menu_mount = nil
 
 local function ScreenGui(children: table)
     return Roact.createElement("ScreenGui", {
@@ -43,7 +43,7 @@ local function get_story(story_name: string)
 end
 
 local function menu()
-    menu = Roact.mount(Roact.createElement("ScreenGui", {
+    menu_mount = Roact.mount(Roact.createElement("ScreenGui", {
         IgnoreGuiInset = true
     }, {
         Roact.createElement("TextButton", {
@@ -56,8 +56,8 @@ local function menu()
             TextColor3 = Color3.new(0, 0, 0),
             [Roact.Event.Activated] = function()
                 StoryHandler:start("Book")
-                Roact.unmount(menu)
-                menu = nil
+                Roact.unmount(menu_mount)
+                menu_mount = nil
             end,
         })
     }), PlayerGui)
