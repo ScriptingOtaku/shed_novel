@@ -17,6 +17,7 @@ type Story = {
 type Line = {}
 
 local mount = nil
+local menu = nil
 
 local function ScreenGui(children: table)
     return Roact.createElement("ScreenGui", {
@@ -41,12 +42,33 @@ local function get_story(story_name: string)
     return story_file
 end
 
+local function menu()
+    menu = Roact.mount(Roact.createElement("ScreenGui", {
+        IgnoreGuiInset = true
+    }, {
+        Roact.createElement("TextButton", {
+            Text = "Start Story",
+            Size = UDim2.new(1, 0, 1, 0),
+            AnchorPoint = Vector2.new(0.5, 0.5),
+            Position = UDim2.new(0.5, 0, 0.5, 0),
+            TextSize = 30,
+            BackgroundColor3 = Color3.new(1, 1, 1),
+            TextColor3 = Color3.new(0, 0, 0),
+            [Roact.Event.Activated] = function()
+                StoryHandler:start("Book")
+                Roact.unmount(menu)
+                menu = nil
+            end,
+        })
+    }), PlayerGui)
+end
+
 local function run(story: Story, line: Line, index: number)
 
     if line == nil then
         UnMount()
         Set:remove_all()
-        Player:Kick("Story finished, i have no idea what ending you got.")
+        menu()
         return
     end
 
@@ -138,7 +160,7 @@ local function run(story: Story, line: Line, index: number)
         print("END")
         Set:remove_all()
         UnMount()
-        Player:Kick("Story finished, i have no idea what ending you got.")
+        menu()
     end
 end
 
